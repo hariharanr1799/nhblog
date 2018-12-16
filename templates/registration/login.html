@@ -1,0 +1,56 @@
+{% extends 'registration/signbase.html' %}
+
+{% block content %}
+
+    </style>
+    <title> Login </title>
+</head>
+
+<body>
+
+	<div class="container">
+		<div class="col-md-6 box" id="box"><br><br><br>
+			<h4 style="text-align: center; font-weight: bold;">LOG IN</h4><br><br>
+			<form method="POST" action="{% url 'accounts:login' %}">
+                {% csrf_token %}
+				<label for="id_username" id="username">Username</label><br>
+				<input type="text" name="username" required class="textbox" id="id_username" autofocus><br><br>
+				<label for="id_password" id="pass">Password</label><br>
+				<input type="password" name="password" required class="textbox" id="id_password"><br><br><br>
+				<div style="text-align: center;">
+					<button type="submit" class="btn btn-primary">LOGIN</button><br><br>
+					<div id="errormsg" style="color: red;"><br>
+                    {% if error %}
+                        {{ error }}
+                    {% endif %}
+                    <br><br></div>
+                    <a style="color: #007bff; cursor: pointer" data-toggle="modal" data-target="#forgotpass">Forgot Password?</a><br><br>
+                    <a href="{% url 'accounts:signup' %}">Click here to Signup</a>
+				</div><!--div just for centering the button-->
+			</form>
+		</div>
+	</div>
+
+	<div class="modal fade" id="forgotpass" tabindex="-1" role="dialog" aria-labelledby="forgotpass" aria-hidden="true">
+	  	<div class="modal-dialog modal-dialog-centered" role="document">
+	    	<div class="modal-content">
+		      	<div class="modal-body">
+		      		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		        		<span aria-hidden="true">&times;</span>
+		        	</button>
+		        	<form action="forgot.php" method="POST" style="margin-top: 30px">
+                        {% csrf_token %}
+		        		<div class="form-group">
+						    <label style="color: #343a40;" for="id_email">Email ID:</label><br>
+						    <input type="email" name="email" id="email" class="textbox">
+						</div>
+						<div style="text-align: center; margin-top: 30px;"><button type="submit" class="btn btn-primary">Send link</button><br><br></div>
+					</form>
+		      	</div>
+	    	</div>
+	  	</div>
+	</div>
+
+    <script type="text/javascript">
+    var height = 680;
+{% endblock %}

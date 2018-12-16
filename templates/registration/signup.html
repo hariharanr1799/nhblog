@@ -1,0 +1,161 @@
+{% extends 'registration/signbase.html' %}
+
+{% block content %}
+
+    form {
+        width: 90%;
+    }
+
+    .rbox {
+        padding-bottom: 20px;
+    }
+
+    .lbox {
+        padding-bottom: 20px;
+    }
+
+    @media (min-width: 768px) {
+        .rbox {
+            padding-left: 35px;
+        }
+
+        .lbox {
+            padding-right: 35px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .box {
+            height: 1020px;
+        }
+    }
+
+    .g-recaptcha {
+        display: inline-block;
+    }
+
+    @media (max-width:418px) {
+        .g-recaptcha {
+            display: block;
+            transform-origin: top left
+        }
+    }
+
+    </style>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <title> Sign Up </title>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="col-md-12 box" id="box"><br>
+            <h4 style="text-align: center; font-weight: bold;">SIGN UP</h4><br>
+            <form method="POST" action = "{% url 'accounts:signup' %}">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6 lbox">
+                    <label for="id_name" id="name">Full Name<span style="color:red">&nbsp*</span></label><br>
+                    <input type="text" name="name" id="id_name" required class="textbox" maxlength="100" autofocus>
+                </div>
+                <div class="col-md-6 rbox">
+                    <label for="id_rollno" id="rollno">Roll Number<span style="color:red">&nbsp*</span></label><br>
+                    <input type="text" name="rollno" required class="textbox" maxlength="9" id="id_rollno">
+                </div>
+                <div class="col-md-6 lbox">
+                    <label for="id_emailp" id="emailp">Email ID (Personal)<span style="color:red">&nbsp*</span></label><br>
+                    <input type="email" name="emailp" required class="textbox" maxlength="254" id="id_emailp">
+                </div>
+                <div class="col-md-6 rbox">
+                    <label for="id_emaili" id="emaili">Email ID (Institute)</label><br>
+                    <input type="email" name="emaili" class="textbox" maxlength="254" id="id_emaili">
+                </div>
+                <div class="col-md-6 lbox">
+                    <label for="id_phone" id="phoneno">Phone Number<span style="color:red">&nbsp*</span></label><br>
+                    <input type="text" pattern="[0-9]{10}" name="phone" required maxlength="10" class="textbox" id="id_phone">
+                </div>
+                <div class="col-md-6 rbox">
+                    <label for="id_username" id="username">Username<span style="color:red">&nbsp*</span></label><br>
+                    <input type="text" name="username" required class="textbox" maxlength="150" id="id_username">
+                </div>
+                <div class="col-md-6 lbox">
+                    <label for="id_password1" id="pass">Password<span style="color:red">&nbsp*</span></label><br>
+                    <input type="password" name="password1" required class="textbox" id="id_password1">
+                </div>
+                <div class="col-md-6 rbox">
+                    <label for="id_password2" id="cpass">Confirm Password<span style="color:red">&nbsp*</span></label><br>
+                    <input type="password" name="password2" required class="textbox" id="id_password2">
+                </div>
+            </div><br>
+            <div class="row">
+                <div class="col-md-12" style="text-align: center;">
+                    <div class="g-recaptcha" data-sitekey="6Lc174EUAAAAAAv3sgJQ3i-kKLY2d6IiGcgW1Be-" data-theme="dark"></div>
+                    <div id="errormsg" style="text-align: center !important; color: red;">
+                        {% if "username" in error %}
+                            Username taken
+                        {% elif "Check your Email" in error %}
+                            Check your personal email. You will be redirected to home page in 5 seconds.
+                        {% endif %}
+                        <br><br>
+                    </div>
+                    <button type="submit" class="btn btn-primary">SIGN UP</button><br><br>
+                    <a href="{% url 'login' %}">Click here to Login</a>
+                </div>
+            </div><!--div just for centering the button-->
+            </form>
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="forgotpass" tabindex="-1" role="dialog" aria-labelledby="forgotpass" aria-hidden="true">
+	  	<div class="modal-dialog modal-dialog-centered" role="document">
+	    	<div class="modal-content">
+		      	<div class="modal-body">
+		      		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		        		<span aria-hidden="true">&times;</span>
+		        	</button>
+		        	<form action="forgot.php" method="POST" style="margin-top: 30px">
+                        {% csrf_token %}
+		        		<div class="form-group">
+						    <label style="color: #343a40;" for="id_email">Email ID:</label><br>
+						    <input type="email" name="email" id="email" class="textbox">
+						</div>
+						<div style="text-align: center; margin-top: 30px;"><button type="submit" class="btn btn-primary">Send link</button><br><br></div>
+					</form>
+		      	</div>
+	    	</div>
+	  	</div>
+	</div>
+
+    <script type="text/javascript">
+    var height = 680;
+    if(window.innerWidth < 768)
+        height = 1020;
+
+    function scaleCaptcha() {
+        var reCaptchaWidth = 416;
+        var containerWidth = $('.container').width();
+        if(reCaptchaWidth > containerWidth) {
+            var captchaScale = containerWidth / 375;
+            $('.g-recaptcha').css({
+            'transform':'scale('+captchaScale+')'
+            });
+        }
+    }
+
+    $(function() {
+        scaleCaptcha();
+        $(window).resize( scaleCaptcha() );
+    });
+
+    {% if "Check your Email" in error %}
+        function redirect(){
+            window.location.href = "{% url 'home' %}";
+        }
+
+        setTimeout(redirect, 5000);
+    {% endif %}
+
+    </script>
+
+{% endblock %}

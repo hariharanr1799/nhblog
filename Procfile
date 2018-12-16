@@ -1,0 +1,1 @@
+web: gunicorn nhblog.wsgi --log-file -
